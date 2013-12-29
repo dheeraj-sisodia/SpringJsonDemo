@@ -3,7 +3,7 @@ SpringJsonDemo
 copy required lib from:
 https://github.com/dheeraj-sisodia/SpringMVCDemo/tree/master/lib
 
-and download jackson 1.7 lib additionly.
+and download jackson 1.7 lib additionally.
 =======================================================================
 change the login credentials for database access in file - database.properties
 
