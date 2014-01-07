@@ -11,72 +11,72 @@
         <link rel="stylesheet" href="/resources/demos/style.css">
     </script>
     <script>
-        
+
         $(function() {
-            $( "#tabs" ).tabs();
+            $("#tabs").tabs();
         });
-        $(document).ready(function(){
-            $("#cmdListCustomer").click(function(){
-                var TableDiv=document.getElementById("divCustomerTable");
-                TableDiv.innerHTML='';
-                $.ajax({dataType: 'json' ,
-                    url:"customers.html",success:function(result){
-                        try{
-                            console.log(result);
-                            var body = document.body,
-                            tbl  = document.createElement('table');
-                            tbl.style.width='50%';
-                            tbl.border = "1";
-                            $.each(result, function() {
-                                var tr = tbl.insertRow();
-                                var td = tr.insertCell();
-                                var editlink = document.createElement('a');
-                                editlink.textContent = 'Edit';
-                                editlink.setAttribute('onclick', 'if(!fetchCustomerDetails(this)) return false;');
-                                editlink.id='edit'+this['mId'];
-                                editlink.href = 'edit/'+this['mId']+'.html';
-                                var deletelink = document.createElement('a');
-                                deletelink.textContent = 'Delete';
-                                deletelink.setAttribute('onclick', 'if(!deleteCustomerDetails(this)) return false;');
-                                deletelink.id='delete'+this['mId'];
-                                deletelink.href = 'delete/'+this['mId']+'.html';
-                                td.appendChild(editlink);
-                                td.appendChild(deletelink);
-                                td = tr.insertCell();
-                                td.appendChild(document.createTextNode( this['mPhoneNo']))
-                                td = tr.insertCell();
-                                td.appendChild(document.createTextNode( this['mMobileNo']))
-                                td = tr.insertCell();
-                                td.appendChild(document.createTextNode( this['mEmailId']))
-                                td = tr.insertCell();
-                                td.appendChild(document.createTextNode( this['mAddress']))
-                                td = tr.insertCell();
-                                td.appendChild(document.createTextNode( this['mName']))
-                                td = tr.insertCell();
-                                td.appendChild(document.createTextNode( this['mId']))
-                            });
-                            TableDiv.appendChild(tbl);
-                        }catch(err){
-                            alert(err);
-                        }
+        function reRender() {
+            var TableDiv = document.getElementById("divCustomerTable");
+            TableDiv.innerHTML = '';
+            $.ajax({dataType: 'json',
+                url: "customers.html", success: function(result) {
+                    try {
+                        console.log(result);
+                        var body = document.body,
+                                tbl = document.createElement('table');
+                        tbl.style.width = '50%';
+                        tbl.border = "1";
+                        $.each(result, function() {
+                            var tr = tbl.insertRow();
+                            var td = tr.insertCell();
+                            var editlink = document.createElement('a');
+                            editlink.textContent = 'Edit';
+                            editlink.setAttribute('onclick', 'if(!fetchCustomerDetails(this)) return false;');
+                            editlink.id = 'edit' + this['mId'];
+                            editlink.href = 'edit/' + this['mId'] + '.html';
+                            var deletelink = document.createElement('a');
+                            deletelink.textContent = 'Delete';
+                            deletelink.setAttribute('onclick', 'if(!deleteCustomerDetails(this)) return false;');
+                            deletelink.id = 'delete' + this['mId'];
+                            deletelink.href = 'delete/' + this['mId'] + '.html';
+                            td.appendChild(editlink);
+                            td.appendChild(deletelink);
+                            td = tr.insertCell();
+                            td.appendChild(document.createTextNode(this['mPhoneNo']))
+                            td = tr.insertCell();
+                            td.appendChild(document.createTextNode(this['mMobileNo']))
+                            td = tr.insertCell();
+                            td.appendChild(document.createTextNode(this['mEmailId']))
+                            td = tr.insertCell();
+                            td.appendChild(document.createTextNode(this['mAddress']))
+                            td = tr.insertCell();
+                            td.appendChild(document.createTextNode(this['mName']))
+                            td = tr.insertCell();
+                            td.appendChild(document.createTextNode(this['mId']))
+                        });
+                        TableDiv.appendChild(tbl);
+                    } catch (err) {
+                        alert(err);
                     }
                 }
+            }
             );
-            });
+        }
+        $(document).ready(function() {
+            $("#cmdListCustomer").click(reRender);
             $('#customerForm').submit(function(event) {
-                var Id= $( '#mId' ).val();
+                var Id = $('#mId').val();
                 var Name = $('#mName').val();
                 var Address = $('#mAddress').val();
                 var Email = $('#mEmailId').val();
                 var Mobile = $('#mMobileNo').val();
                 var Phone = $('#mPhoneNo').val();
-                var json = { "mId" : Id, "mName" : Name, "mAddress": Address, "mEmailId": Email, "mMobileNo": Mobile, "mPhoneNo": Phone};
-    	  
+                var json = {"mId": Id, "mName": Name, "mAddress": Address, "mEmailId": Email, "mMobileNo": Mobile, "mPhoneNo": Phone};
+
                 $.ajax({
-                    url: $("#customerForm").attr( "action"),
+                    url: $("#customerForm").attr("action"),
                     data: JSON.stringify(json),
                     type: "POST",
-        	
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader("Accept", "application/json");
                         xhr.setRequestHeader("Content-Type", "application/json");
@@ -88,33 +88,33 @@
                 event.preventDefault();
             });
         });
-        function fetchCustomerDetails(inLinkId){
-            $.ajax({dataType: 'json' ,
-                url:$('#'+inLinkId.id).attr( "href"),
-                success:function(result){
-                    try{
-                        $( '#mId' ).val(result['mId']);
+        function fetchCustomerDetails(inLinkId) {
+            $.ajax({dataType: 'json',
+                url: $('#' + inLinkId.id).attr("href"),
+                success: function(result) {
+                    try {
+                        $('#mId').val(result['mId']);
                         $('#mName').val(result['mName']);
                         $('#mAddress').val(result['mAddress']);
                         $('#mEmailId').val(result['mEmailId']);
                         $('#mMobileNo').val(result['mMobileNo']);
                         $('#mPhoneNo').val(result['mPhoneNo']);
-                    }catch(err){
+                    } catch (err) {
                         alert(err);
                     }
                 }
             }
-        );
+            );
             return false;
         }
-        function deleteCustomerDetails(inLinkId){
-            $.ajax({dataType: 'json' ,
-                url:$('#'+inLinkId.id).attr( "href"),
-                success:function(result){
-                    $("#cmdListCustomer").click();
+        function deleteCustomerDetails(inLinkId) {
+            $.ajax({dataType: 'json',
+                url: $('#' + inLinkId.id).attr("href"),
+                success: function(result) {
+                    $("#cmdListCustomer").click(reRender);
                 }
             }
-        );
+            );
             $("#cmdListCustomer").click();
             return false;
         }
@@ -125,46 +125,46 @@
     <div id="div1"></div>
     <div id="tabs">
         <ul>
-            <li><a  href="#tabs-1">Introduction</a></li>
+            <li><a href="#tabs-1">Introduction</a></li>
             <li><a id="cmdListCustomer" href="#tabs-2">Customer</a></li>
         </ul>
         <div id="tabs-1">
             <p>Tool Info</p>
         </div>
         <div id="tabs-2">
-            <form:form id="customerForm" action="${pageContext.request.contextPath}/save.html" commandName="customer">  
-                <table>  
-                    <tbody>  
+            <form:form id="customerForm" action="${pageContext.request.contextPath}/save.html" commandName="customer">
+                <table>
+                    <tbody>
                         <tr>
                             <td>customer Id:</td>
                             <td><form:input path="mId" readonly="true"/></td>
-                        </tr>
-                        <tr>
-                            <td>customer Name:</td>
-                            <td><form:input path="mName"/></td>
-                        </tr>
-                        <tr>
-                            <td>customer Address:</td>
-                            <td><form:input path="mAddress"/></td>
-                        </tr>
-                        <tr>
-                            <td>customer Email ID:</td>
-                            <td><form:input path="mEmailId"/></td>
-                        </tr>
+                    </tr>
+                    <tr>
+                        <td>customer Name:</td>
+                        <td><form:input path="mName"/></td>
+                    </tr>
+                    <tr>
+                        <td>customer Address:</td>
+                        <td><form:input path="mAddress"/></td>
+                    </tr>
+                    <tr>
+                        <td>customer Email ID:</td>
+                        <td><form:input path="mEmailId"/></td>
+                    </tr>
 
-                        <tr>
-                            <td>customer Mobile No:</td>
-                            <td><form:input path="mMobileNo"/></td>
-                        </tr>
-                        <tr>
-                            <td>customer Phone No:</td>
-                            <td><form:input path="mPhoneNo"/></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><input type="submit" value="Submit"/><input type="reset" value="Clear"/></td>
-                        </tr>
-                    </tbody>  
-                </table>  
+                    <tr>
+                        <td>customer Mobile No:</td>
+                        <td><form:input path="mMobileNo"/></td>
+                    </tr>
+                    <tr>
+                        <td>customer Phone No:</td>
+                        <td><form:input path="mPhoneNo"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input type="submit" value="Submit"/><input type="reset" value="Clear"/></td>
+                    </tr>
+                    </tbody>
+                </table>
             </form:form>
             <div id="divCustomerTable"></div>
         </div>
